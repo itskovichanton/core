@@ -1,10 +1,10 @@
 package logger
 
 import (
+	"bitbucket.org/itskovich/core/pkg/core"
 	"bitbucket.org/itskovich/goava/pkg/goava/utils"
 	"encoding/json"
 	"fmt"
-	"git.molbulak.ru/a.itskovich/molbulak-services-golang/pkg/core"
 	rotatelogs "github.com/lestrrat/go-file-rotatelogs"
 	"github.com/patrickmn/go-cache"
 	"log"

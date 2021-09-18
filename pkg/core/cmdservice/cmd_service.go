@@ -1,9 +1,9 @@
 package cmdservice
 
 import (
+	"bitbucket.org/itskovich/core/pkg/core"
 	"bitbucket.org/itskovich/goava/pkg/goava/utils"
 	"bufio"
-	"git.molbulak.ru/a.itskovich/molbulak-services-golang/pkg/core"
 	"os"
 	"path/filepath"
 )

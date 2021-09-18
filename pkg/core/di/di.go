@@ -1,10 +1,10 @@
 package di
 
 import (
+	"bitbucket.org/itskovich/core/pkg/core"
+	"bitbucket.org/itskovich/core/pkg/core/cmdservice"
+	"bitbucket.org/itskovich/core/pkg/core/logger"
 	"bitbucket.org/itskovich/goava/pkg/goava"
-	"git.molbulak.ru/a.itskovich/molbulak-services-golang/pkg/core"
-	"git.molbulak.ru/a.itskovich/molbulak-services-golang/pkg/core/cmdservice"
-	"git.molbulak.ru/a.itskovich/molbulak-services-golang/pkg/core/logger"
 	"github.com/patrickmn/go-cache"
 	"go.uber.org/dig"
 	"net/http"

@@ -1,7 +1,7 @@
 package core
 
 import (
-	"git.molbulak.ru/a.itskovich/molbulak-services-golang/pkg/core/validation"
+	"bitbucket.org/itskovich/core/pkg/core/validation"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/cast"
 )
