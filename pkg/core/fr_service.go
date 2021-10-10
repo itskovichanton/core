@@ -13,25 +13,33 @@ import (
 )
 
 type Post struct {
-	ids          []int
 	project, msg string
 	level        int
 	attachment   *os.File
 }
 
 type IFRService interface {
-	PostMsg(post *Post) (string, error)
+	PostMsg(post *Post)
 }
 
 type FRServiceImpl struct {
 	IFRService
+
 	Config     *Config
 	HttpClient *http.Client
 }
 
-func (c *FRServiceImpl) PostMsg(a *Post) (string, error) {
+func (c *FRServiceImpl) PostMsg(a *Post) {
+	if c.Config.FR != nil {
+		go func() { c.postMsg(a, c.Config.FR) }()
+	}
+	if a.level > 2 && c.Config.FR2 != nil {
+		go func() { c.postMsg(a, c.Config.FR2) }()
+	}
+}
 
-	req, err := c.getPostHttpRequest(a)
+func (c *FRServiceImpl) postMsg(a *Post, fr *FR) (string, error) {
+	req, err := c.getPostHttpRequest(a, fr)
 	resp, err := c.HttpClient.Do(req)
 	if err != nil {
 		return "", err
@@ -49,13 +57,13 @@ func (c *FRServiceImpl) PostMsg(a *Post) (string, error) {
 	return b, nil
 }
 
-func (c *FRServiceImpl) getPostHttpRequest(a *Post) (*http.Request, error) {
+func (c *FRServiceImpl) getPostHttpRequest(a *Post, fr *FR) (*http.Request, error) {
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 	writer.WriteField("msg", a.msg)
 	writer.WriteField("project", a.project)
 	writer.WriteField("level", strconv.Itoa(a.level))
-	writer.WriteField("ids", strings.Join(utils.ToStringSliceInts(a.ids), ","))
+	writer.WriteField("ids", strings.Join(utils.ToStringSliceInts([]int{fr.DeveloperId}), ","))
 	if a.attachment != nil {
 		err := httputils.AddFile("attachment", a.attachment.Name(), writer)
 		if err != nil {
@@ -68,7 +76,7 @@ func (c *FRServiceImpl) getPostHttpRequest(a *Post) (*http.Request, error) {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", c.Config.FR.Url+"/postMsg", body)
+	req, err := http.NewRequest("POST", fr.Url+"/postMsg", body)
 	req.Header.Set("Content-Type", writer.FormDataContentType())
 	return req, err
 }

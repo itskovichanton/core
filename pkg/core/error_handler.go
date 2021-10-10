@@ -18,7 +18,7 @@ type IErrorHandler interface {
 	HandleWithMessage(err error, message interface{}, byFR bool) *AlertParams
 	HandleWithCustomParams(err error, alertParamsPreprocessor func(alertParams *AlertParams)) *AlertParams
 	Handle(err error, byFR bool) *AlertParams
-	SendAlert(a *AlertParams) error
+	SendAlert(a *AlertParams)
 }
 
 type ErrorHandlerImpl struct {
@@ -68,9 +68,10 @@ func (c *ErrorHandlerImpl) Handle(err error, byFR bool) *AlertParams {
 	})
 }
 
-func (c *ErrorHandlerImpl) SendAlert(a *AlertParams) error {
+func (c *ErrorHandlerImpl) SendAlert(a *AlertParams) {
+
 	if !a.Send {
-		return nil
+		return
 	}
 
 	if len(a.Subject) == 0 {
@@ -101,7 +102,6 @@ func (c *ErrorHandlerImpl) SendAlert(a *AlertParams) error {
 
 	if a.ByFR {
 		p := Post{
-			ids:     []int{c.Config.FR.DeveloperId},
 			project: a.Subject,
 			msg:     utils.ChopOffString(a.Message, 4000),
 			level:   a.Level,
@@ -110,17 +110,16 @@ func (c *ErrorHandlerImpl) SendAlert(a *AlertParams) error {
 			p.attachment = a.Attachments[0]
 		}
 		c.FRService.PostMsg(&p)
+
 	}
 
 	if pr != nil {
-		c.EmailService.Send(pr)
+		go c.EmailService.Send(pr)
 		//if err != nil {
 		//	a.ByEmail = false
 		//	a.Message = utils.GetErrorFullInfo(err)
 		//	return c.SendAlert(a)
 		//}
 	}
-
-	return nil
 
 }

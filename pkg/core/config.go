@@ -84,7 +84,7 @@ type Http struct {
 type Config struct {
 	Profile  string
 	Server   *Server
-	FR       *FR
+	FR, FR2  *FR
 	App      *AppInfo
 	Props    *Props
 	Actions  *Actions
