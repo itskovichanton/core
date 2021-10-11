@@ -40,13 +40,22 @@ func (c *LoggerServiceImpl) GetFileLogger(name string, profile string, maxHistor
 	return c.GetLogger(name, profile, maxHistory, func(profile string) *log.Logger {
 
 		filename := c.GetLogFileName(name, profile)
-		l, err := rotatelogs.New(
-			filename,
-			//rotatelogs.WithLinkName(filename),
-			rotatelogs.WithMaxAge(-1),
-			rotatelogs.WithRotationTime(time.Hour*24),
-			rotatelogs.WithRotationCount(maxHistory),
-		)
+		var err error
+		var l *rotatelogs.RotateLogs
+		if maxHistory == 0 {
+			l, err = rotatelogs.New(
+				filename,
+				rotatelogs.WithMaxAge(-1),
+				rotatelogs.WithRotationTime(time.Hour*24),
+			)
+		} else {
+			l, err = rotatelogs.New(
+				filename,
+				rotatelogs.WithMaxAge(-1),
+				rotatelogs.WithRotationTime(time.Hour*24),
+				rotatelogs.WithRotationCount(maxHistory),
+			)
+		}
 		if err != nil {
 			log.Fatalf("Failed to Initialize Log File %s", err)
 		}
