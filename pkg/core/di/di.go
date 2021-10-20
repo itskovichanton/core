@@ -2,6 +2,7 @@ package di
 
 import (
 	"bitbucket.org/itskovich/core/pkg/core"
+	"bitbucket.org/itskovich/core/pkg/core/app"
 	"bitbucket.org/itskovich/core/pkg/core/cmdservice"
 	"bitbucket.org/itskovich/core/pkg/core/logger"
 	"bitbucket.org/itskovich/goava/pkg/goava"
@@ -32,8 +33,16 @@ func (c *DI) buildContainer(container *dig.Container) *dig.Container {
 	container.Provide(c.NewCmdRunnerService)
 	container.Provide(c.NewCmdService)
 	container.Provide(c.NewOSFunctionsService)
+	container.Provide(c.NewAppRunner)
 
 	return container
+}
+
+func (c *DI) NewAppRunner(a app.IApp, config *core.Config) app.IAppRunner {
+	return &app.AppRunnerImpl{
+		Config: config,
+		App:    a,
+	}
 }
 
 func (c *DI) NewOSFunctionsService(cmdService cmdservice.ICmdService) cmdservice.IOSFunctionsService {
