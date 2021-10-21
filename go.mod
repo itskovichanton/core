@@ -3,7 +3,8 @@ module bitbucket.org/itskovich/core
 go 1.17
 
 require (
-	bitbucket.org/itskovich/goava v0.0.0-20210918094352-f6ca54ddfcd8
+	bitbucket.org/itskovich/goava v0.0.0-20211021114853-a1b1270d3db0
+	github.com/kardianos/service v1.2.0
 	github.com/labstack/echo/v4 v4.6.1
 	github.com/labstack/gommon v0.3.0
 	github.com/lestrrat/go-file-rotatelogs v0.0.0-20180223000712-d3151e2a480f
@@ -22,7 +23,6 @@ require (
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/jehiah/go-strftime v0.0.0-20171201141054-1d33003b3869 // indirect
 	github.com/jonboulle/clockwork v0.2.2 // indirect
-	github.com/kardianos/service v1.2.0 // indirect
 	github.com/lestrrat/go-envload v0.0.0-20180220120943-6ed08b54a570 // indirect
 	github.com/lestrrat/go-strftime v0.0.0-20180220042222-ba3bf9c1d042 // indirect
 	github.com/lingdor/stackerror v0.0.0-20191119040541-976d8885ed76 // indirect

@@ -2,6 +2,7 @@ package app
 
 import (
 	"bitbucket.org/itskovich/core/pkg/core"
+	"bitbucket.org/itskovich/goava/pkg/goava"
 	"github.com/kardianos/service"
 )
 
@@ -32,21 +33,22 @@ func (c *AppRunnerImpl) runAsWindowsService() error {
 			options[k] = v
 		}
 	}
+	options["Restart"] = "on-success"
+	options["SuccessExitStatus"] = "1 2 8 SIGKILL"
 
 	srvName := c.Config.App.GetFullName() + "__service"
-	svcConfig := &service.Config{
-		Name:        srvName,
-		DisplayName: srvName,
-		Description: c.Config.GetStr("service", "description"),
-		Dependencies: []string{
-			"Requires=network.target",
-			"After=network-online.target syslog.target"},
-		Option: options,
-	}
-
-	srv := &Service{
-		Config: svcConfig,
-		Action: func() {
+	srv := &goava.Service{
+		Config: &service.Config{
+			Name:        srvName,
+			DisplayName: srvName,
+			Description: c.Config.GetStr("service", "description"),
+			Dependencies: []string{
+				"Requires=network.target",
+				"After=network-online.target syslog.target",
+			},
+			Option: options,
+		},
+		Action: func(logger service.Logger) {
 			c.App.Run()
 		},
 	}

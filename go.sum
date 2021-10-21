@@ -1,5 +1,7 @@
 bitbucket.org/itskovich/goava v0.0.0-20210918094352-f6ca54ddfcd8 h1:wycMeiljQYIx645McjsPHvPTxjcoLcEDNF8j4hm3A3k=
 bitbucket.org/itskovich/goava v0.0.0-20210918094352-f6ca54ddfcd8/go.mod h1:TwOfGghENGJGT1n5RwW7kDaj6RTPBXX3eqOtovOGNQ0=
+bitbucket.org/itskovich/goava v0.0.0-20211021114853-a1b1270d3db0 h1:svD1YJ8Nr9I/k2Ud4NhdifQ1jjiLG1xVdyI7sAyDXoU=
+bitbucket.org/itskovich/goava v0.0.0-20211021114853-a1b1270d3db0/go.mod h1:TwOfGghENGJGT1n5RwW7kDaj6RTPBXX3eqOtovOGNQ0=
 cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 cloud.google.com/go v0.34.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 cloud.google.com/go v0.38.0/go.mod h1:990N+gfupTy94rShfmMCWGDn0LpTmnzTp2qbd1dvSRU=
