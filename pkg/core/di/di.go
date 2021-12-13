@@ -110,7 +110,7 @@ func (c *DI) NewLoggerService(config *core.Config) logger.ILoggerService {
 }
 
 func (c *DI) NewAlertParamsPostProcessor() core.IParamsPostProcessor {
-	r := &core.ParamsPostProcessorReducerImpl{}
+	r := &core.AlertParamsPostProcessorReducerImpl{}
 	r.Init()
 	return r
 }

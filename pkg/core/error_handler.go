@@ -27,18 +27,18 @@ type IParamsPostProcessor interface {
 	Process(params *AlertParams)
 }
 
-type ParamsPostProcessorReducerImpl struct {
+type AlertParamsPostProcessorReducerImpl struct {
 	IParamsPostProcessor
 
 	lastSentMsgs *cache.Cache
 	GetEntry     func(params *AlertParams) (string, time.Duration)
 }
 
-func (c *ParamsPostProcessorReducerImpl) Init() {
+func (c *AlertParamsPostProcessorReducerImpl) Init() {
 	c.lastSentMsgs = cache.New(cache.NoExpiration, cache.NoExpiration)
 }
 
-func (c *ParamsPostProcessorReducerImpl) Process(params *AlertParams) {
+func (c *AlertParamsPostProcessorReducerImpl) Process(params *AlertParams) {
 
 	key, sameKeysDelayInterval := c.getEntryParams(params)
 
@@ -51,7 +51,7 @@ func (c *ParamsPostProcessorReducerImpl) Process(params *AlertParams) {
 	}
 }
 
-func (c *ParamsPostProcessorReducerImpl) getEntryParams(params *AlertParams) (string, time.Duration) {
+func (c *AlertParamsPostProcessorReducerImpl) getEntryParams(params *AlertParams) (string, time.Duration) {
 	if c.GetEntry != nil {
 		return c.GetEntry(params)
 	}
