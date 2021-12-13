@@ -40,6 +40,9 @@ func (c *FRServiceImpl) PostMsg(a *Post) {
 
 func (c *FRServiceImpl) postMsg(a *Post, fr *FR) (string, error) {
 	req, err := c.getPostHttpRequest(a, fr)
+	if err != nil {
+		return "", err
+	}
 	resp, err := c.HttpClient.Do(req)
 	if err != nil {
 		return "", err
@@ -77,6 +80,9 @@ func (c *FRServiceImpl) getPostHttpRequest(a *Post, fr *FR) (*http.Request, erro
 	}
 
 	req, err := http.NewRequest("POST", fr.Url+"/postMsg", body)
+	if err != nil {
+		return nil, err
+	}
 	req.Header.Set("Content-Type", writer.FormDataContentType())
 	return req, err
 }

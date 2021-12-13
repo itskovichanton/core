@@ -2,6 +2,7 @@ package logger
 
 import (
 	"bitbucket.org/itskovich/core/pkg/core"
+	"bitbucket.org/itskovich/core/pkg/core/validation"
 	"bitbucket.org/itskovich/goava/pkg/goava/utils"
 	"encoding/json"
 	"fmt"
@@ -28,7 +29,11 @@ type LoggerServiceImpl struct {
 }
 
 func (c *LoggerServiceImpl) GetDefaultActionsLogger() *log.Logger {
-	return c.GetFileLogger("actions", "", 1)
+	logMaxDays, err := validation.CheckInt("actions-logMaxDays", c.Config.GetStr("actions", "logmaxdays"))
+	if err != nil {
+		logMaxDays = 1
+	}
+	return c.GetFileLogger("actions", "", logMaxDays)
 }
 
 func (c *LoggerServiceImpl) GetDefaultFileOpsLogger() *log.Logger {

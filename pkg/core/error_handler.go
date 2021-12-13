@@ -2,8 +2,10 @@ package core
 
 import (
 	"bitbucket.org/itskovich/goava/pkg/goava/utils"
+	"github.com/patrickmn/go-cache"
 	"github.com/spf13/cast"
 	"os"
+	"time"
 )
 
 type AlertParams struct {
@@ -21,13 +23,48 @@ type IErrorHandler interface {
 	SendAlert(a *AlertParams)
 }
 
+type IParamsPostProcessor interface {
+	Process(params *AlertParams)
+}
+
+type ParamsPostProcessorReducerImpl struct {
+	IParamsPostProcessor
+
+	lastSentMsgs *cache.Cache
+	GetEntry     func(params *AlertParams) (string, time.Duration)
+}
+
+func (c *ParamsPostProcessorReducerImpl) Init() {
+	c.lastSentMsgs = cache.New(cache.NoExpiration, cache.NoExpiration)
+}
+
+func (c *ParamsPostProcessorReducerImpl) Process(params *AlertParams) {
+
+	key, sameKeysDelayInterval := c.getEntryParams(params)
+
+	_, found := c.lastSentMsgs.Get(key)
+
+	if found {
+		params.Send = false
+	} else {
+		c.lastSentMsgs.Set(key, 1, sameKeysDelayInterval)
+	}
+}
+
+func (c *ParamsPostProcessorReducerImpl) getEntryParams(params *AlertParams) (string, time.Duration) {
+	if c.GetEntry != nil {
+		return c.GetEntry(params)
+	}
+	return params.Subject + utils.MD5(params.Message), 5 * time.Minute
+}
+
 type ErrorHandlerImpl struct {
 	IErrorHandler
 
 	EmailService        IEmailService
 	Config              *Config
 	FRService           IFRService
-	ParamsPostProcessor func(params *Params)
+	ParamsPostProcessor IParamsPostProcessor
 	alertEmails         []string
 }
 
@@ -78,6 +115,14 @@ func (c *ErrorHandlerImpl) SendAlert(a *AlertParams) {
 		a.Subject = c.Config.App.Name
 	}
 
+	if c.ParamsPostProcessor != nil {
+		c.ParamsPostProcessor.Process(a)
+	}
+
+	if !a.Send {
+		return
+	}
+
 	var pr *Params
 	if a.ByEmail {
 		pr = &Params{
@@ -94,9 +139,6 @@ func (c *ErrorHandlerImpl) SendAlert(a *AlertParams) {
 				},
 			},
 			AttachmentFileNames: []string{},
-		}
-		if c.ParamsPostProcessor != nil {
-			c.ParamsPostProcessor(pr)
 		}
 	}
 
@@ -115,11 +157,6 @@ func (c *ErrorHandlerImpl) SendAlert(a *AlertParams) {
 
 	if pr != nil {
 		go c.EmailService.Send(pr)
-		//if err != nil {
-		//	a.ByEmail = false
-		//	a.Message = utils.GetErrorFullInfo(err)
-		//	return c.SendAlert(a)
-		//}
 	}
 
 }

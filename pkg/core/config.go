@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 )
 
@@ -145,6 +146,11 @@ func (c *Config) GetTempFilesStorageDir() string {
 
 func (c *Config) GetTempFile(pattern string) (*os.File, error) {
 	return ioutil.TempFile(c.GetTempFilesStorageDir(), pattern)
+}
+
+func (c *Config) GetInt(path ...string) int {
+	r, _ := strconv.Atoi(c.GetStr(path...))
+	return r
 }
 
 func (c *Config) GetStr(path ...string) string {

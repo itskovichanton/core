@@ -29,6 +29,7 @@ func (c *DI) buildContainer(container *dig.Container) *dig.Container {
 	container.Provide(c.NewFRService)
 	container.Provide(c.NewEmailService)
 	container.Provide(c.NewErrorHandler)
+	container.Provide(c.NewAlertParamsPostProcessor)
 	container.Provide(c.NewGenerator)
 	container.Provide(c.NewCmdRunnerService)
 	container.Provide(c.NewCmdService)
@@ -101,18 +102,25 @@ func (c *DI) NewCache() *cache.Cache {
 	return cache.New(cache.NoExpiration, cache.NoExpiration)
 }
 
-func (c *DI) NewLoggerService(config *core.Config, cache *cache.Cache) logger.ILoggerService {
+func (c *DI) NewLoggerService(config *core.Config) logger.ILoggerService {
 	return &logger.LoggerServiceImpl{
 		Config: config,
-		Cache:  cache,
+		Cache:  c.NewCache(),
 	}
 }
 
-func (c *DI) NewErrorHandler(emailService core.IEmailService, config *core.Config, frservice core.IFRService) core.IErrorHandler {
+func (c *DI) NewAlertParamsPostProcessor() core.IParamsPostProcessor {
+	r := &core.ParamsPostProcessorReducerImpl{}
+	r.Init()
+	return r
+}
+
+func (c *DI) NewErrorHandler(paramsPostProcessor core.IParamsPostProcessor, emailService core.IEmailService, config *core.Config, frservice core.IFRService) core.IErrorHandler {
 	r := &core.ErrorHandlerImpl{
-		EmailService: emailService,
-		Config:       config,
-		FRService:    frservice,
+		ParamsPostProcessor: paramsPostProcessor,
+		EmailService:        emailService,
+		Config:              config,
+		FRService:           frservice,
 	}
 	r.Init()
 	return r
