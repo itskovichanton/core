@@ -112,6 +112,27 @@ func Args(ld map[string]interface{}, args interface{}) map[string]interface{} {
 	return Field(ld, "p", args)
 }
 
+func Add(ld map[string]interface{}, field string, args string) map[string]interface{} {
+	v := ld[field]
+	if v == nil {
+		Field(ld, field, args)
+		return ld
+	}
+
+	vStr := ""
+	if v != nil {
+		switch e := v.(type) {
+		case string:
+			vStr = e
+		default:
+			vStr = utils.ToJson(v)
+		}
+	}
+
+	Field(ld, field, vStr+args)
+	return ld
+}
+
 func Field(ld map[string]interface{}, field string, args interface{}) map[string]interface{} {
 	_, chopOffDisabled := ld["chopoff-disabled"]
 	if args != nil {

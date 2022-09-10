@@ -18,7 +18,7 @@ type AppRunnerImpl struct {
 }
 
 func (c *AppRunnerImpl) Run() error {
-	if c.Config.GetBool("service", "enabled") {
+	if c.Config.IsServceMode() {
 		return c.runAsWindowsService()
 	}
 	return c.App.Run()

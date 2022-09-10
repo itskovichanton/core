@@ -10,7 +10,7 @@ import (
 )
 
 type ICmdRunnerService interface {
-	StartE(arg ...string) ([]byte, error)
+	StartE(preprocessor func(cm *exec.Cmd), arg ...string) ([]byte, error)
 	Start(arg ...string) *exec.Cmd
 	Run(writer func(stdin io.WriteCloser)) (string, error)
 	Cmd(input string) (string, error)
@@ -63,8 +63,12 @@ func (c *CmdRunnerServiceImpl) Run(writer func(stdin io.WriteCloser)) (string, e
 	return "", nil
 }
 
-func (c *CmdRunnerServiceImpl) StartE(arg ...string) ([]byte, error) {
-	r, err := c.Start(arg...).Output()
+func (c *CmdRunnerServiceImpl) StartE(preprocessor func(cm *exec.Cmd), arg ...string) ([]byte, error) {
+	cm := c.Start(arg...)
+	if preprocessor != nil {
+		preprocessor(cm)
+	}
+	r, err := cm.Output()
 	if err != nil {
 		switch ex := err.(type) {
 		case *exec.ExitError:
@@ -78,7 +82,7 @@ func (c *CmdRunnerServiceImpl) StartE(arg ...string) ([]byte, error) {
 func (c *CmdRunnerServiceImpl) Start(arg ...string) *exec.Cmd {
 
 	if c.IsWindows() {
-		//arg = append([]string{"/с"}, arg...)
+		arg = append([]string{"cmd", "/k"}, arg...)
 		return exec.Command(arg[0], arg[1:]...)
 	}
 

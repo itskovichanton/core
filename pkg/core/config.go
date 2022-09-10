@@ -117,7 +117,11 @@ func (c *Config) GetAppName() string {
 }
 
 func (c *Config) GetBaseWorkDir() string {
-	return filepath.Join(c.App.Name, "workdir")
+	baseDir := ""
+	if c.IsServceMode() {
+		baseDir = c.ServiceWorkDir()
+	}
+	return filepath.Join(baseDir, c.App.Name, "workdir")
 }
 
 func (c *Config) GetOnBaseWorkDir(s ...string) string {
@@ -185,6 +189,14 @@ func (c *Config) Get(path ...string) interface{} {
 
 func (c *Config) GetResourceFilePath(resourcePath string) string {
 	return filepath.Join(c.Props.ResourcesPath, resourcePath)
+}
+
+func (c *Config) IsServceMode() bool {
+	return c.GetBool("service", "enabled")
+}
+
+func (c *Config) ServiceWorkDir() string {
+	return c.GetStr("service", "workdir")
 }
 
 type IConfigService interface {

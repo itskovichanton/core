@@ -2,14 +2,12 @@ package core
 
 import (
 	"bitbucket.org/itskovich/goava/pkg/goava/httputils"
-	"bitbucket.org/itskovich/goava/pkg/goava/utils"
 	"bytes"
 	"fmt"
 	"mime/multipart"
 	"net/http"
 	"os"
 	"strconv"
-	"strings"
 )
 
 type Post struct {
@@ -33,9 +31,9 @@ func (c *FRServiceImpl) PostMsg(a *Post) {
 	if c.Config.FR != nil {
 		go func() { c.postMsg(a, c.Config.FR) }()
 	}
-	if a.level > 2 && c.Config.FR2 != nil {
-		go func() { c.postMsg(a, c.Config.FR2) }()
-	}
+	//if a.level > 2 && c.Config.FR2 != nil {
+	//	go func() { c.postMsg(a, c.Config.FR2) }()
+	//}
 }
 
 func (c *FRServiceImpl) postMsg(a *Post, fr *FR) (string, error) {
@@ -66,7 +64,7 @@ func (c *FRServiceImpl) getPostHttpRequest(a *Post, fr *FR) (*http.Request, erro
 	writer.WriteField("msg", a.msg)
 	writer.WriteField("project", a.project)
 	writer.WriteField("level", strconv.Itoa(a.level))
-	writer.WriteField("ids", strings.Join(utils.ToStringSliceInts([]int{fr.DeveloperId}), ","))
+	//writer.WriteField("ids", strings.Join(utils.ToStringSliceInts([]int{fr.DeveloperId}), ","))
 	if a.attachment != nil {
 		err := httputils.AddFile("attachment", a.attachment.Name(), writer)
 		if err != nil {

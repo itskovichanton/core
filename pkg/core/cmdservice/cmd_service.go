@@ -5,6 +5,7 @@ import (
 	"bitbucket.org/itskovich/goava/pkg/goava/utils"
 	"bufio"
 	"os"
+	"os/exec"
 	"path/filepath"
 )
 
@@ -13,7 +14,7 @@ type ICmd interface {
 }
 
 type ICmdService interface {
-	Run(cmd ICmd, args ...string) (string, error)
+	Run(cmd ICmd, preprocessor func(cm *exec.Cmd), args ...string) (string, error)
 	Init()
 	GetCmdRunnerService() ICmdRunnerService
 }
@@ -37,10 +38,10 @@ func (c *CmdServiceImpl) Init() {
 	if len(c.shExecutorFileName) == 0 {
 		c.shExecutorFileName = "C:\\Program Files\\Git\\bin\\sh.exe"
 	}
-	c.cmdsDirName = c.Config.GetOnBaseWorkDir("cmds")
+	c.cmdsDirName = c.Config.GetDir("cmds")
 }
 
-func (c *CmdServiceImpl) Run(cmd ICmd, args ...string) (string, error) {
+func (c *CmdServiceImpl) Run(cmd ICmd, preprocessor func(cm *exec.Cmd), args ...string) (string, error) {
 	bashFileName, err := c.prepareShFile(cmd)
 	if err != nil {
 		return "", err
@@ -50,7 +51,12 @@ func (c *CmdServiceImpl) Run(cmd ICmd, args ...string) (string, error) {
 		cmdName = c.shExecutorFileName
 	}
 	args = append([]string{cmdName, bashFileName}, args...)
-	r, err := c.CmdRunnerService.StartE(args...)
+	r, err := c.CmdRunnerService.StartE(func(cm *exec.Cmd) {
+		cm.Dir = filepath.Dir(bashFileName)
+		if preprocessor != nil {
+			preprocessor(cm)
+		}
+	}, args...)
 
 	return string(r), err
 }

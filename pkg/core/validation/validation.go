@@ -2,8 +2,13 @@ package validation
 
 import (
 	"bitbucket.org/itskovich/goava/pkg/goava/errs"
+	"bitbucket.org/itskovich/goava/pkg/goava/utils"
+	"fmt"
 	"github.com/spf13/cast"
+	"net/mail"
+	"reflect"
 	"regexp"
+	"strings"
 	"time"
 )
 
@@ -17,6 +22,7 @@ const (
 	ViolatesRegexp = "VIOLATES_REGEXP"
 	Unexpectable   = "UNEXPECTABLE"
 	InvalidLength  = "INVALID_LENGTH"
+	InvalidEmail   = "INVALID_EMAIL"
 	InvalidBoolean = "INVALID_BOOLEAN"
 )
 
@@ -163,4 +169,77 @@ func CheckDate(param string, v string) (*time.Time, error) {
 	}
 	rr := r.(time.Time)
 	return &rr, nil
+}
+
+func CheckMaxLen(param string, v string, maxLen int) (interface{}, error) {
+	return CheckCondition(func() (interface{}, bool) {
+		return v, len(v) <= maxLen
+	}, param, InvalidLength, v, func() string {
+		return fmt.Sprintf("Длина строки превышает %v символов", maxLen)
+	})
+}
+
+func CheckMinLen(param string, v string, minLen int) (interface{}, error) {
+	return CheckCondition(func() (interface{}, bool) {
+		return v, len(v) >= minLen
+	}, param, InvalidLength, v, func() string {
+		return fmt.Sprintf("Длина строки меньше %v символов", minLen)
+	})
+}
+
+func CheckEmail(param string, v string) (interface{}, error) {
+	return CheckCondition(func() (interface{}, bool) {
+		addr, err := mail.ParseAddress(cast.ToString(v))
+		return addr, err == nil
+	}, param, InvalidEmail, v, func() string {
+		return "Некорректный e-mail"
+	})
+}
+
+func CheckFirst(param string, a interface{}) error {
+	r := Check(param, a)
+	if len(r) > 0 {
+		return r[0]
+	}
+	return nil
+}
+
+func Check(param string, a interface{}) []error {
+	var checkErrors []error
+	t := reflect.TypeOf(a).Elem()
+	v := reflect.ValueOf(a).Elem()
+	for i := 0; i < t.NumField(); i++ {
+		f := t.Field(i)
+		fv := v.Field(i)
+		checksStr := f.Tag.Get("check")
+		if len(checksStr) == 0 {
+			continue
+		}
+		checks := strings.Split(checksStr, ",")
+		if len(v.String()) == 0 && !utils.ContainsStr(checks, "notempty", true) {
+			continue
+		}
+		for _, checkType := range checks {
+			checkType = strings.ToLower(checkType)
+			err := checkField(f, checkType, param, fv)
+			if err != nil {
+				checkErrors = append(checkErrors, err)
+			}
+		}
+	}
+	return checkErrors
+}
+
+func checkField(f reflect.StructField, checkType string, param string, fv reflect.Value) error {
+	param += "." + f.Name
+	var err error
+	switch checkType {
+	case "email":
+		_, err = CheckEmail(param, fv.String())
+		break
+	case "notempty":
+		_, err = CheckNotEmpty(param, fv.Interface())
+		break
+	}
+	return err
 }

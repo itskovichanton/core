@@ -26,13 +26,13 @@ func (c *OSFunctionsServiceImpl) GetCmdService() ICmdService {
 }
 
 func (c *OSFunctionsServiceImpl) IsPortBusy(port int) bool {
-	r, _ := c.CmdService.Run(&NetStatCmd{}, strconv.Itoa(port))
+	r, _ := c.CmdService.Run(&NetStatCmd{}, nil, strconv.Itoa(port))
 	return len(r) > 0
 }
 
 func (c *OSFunctionsServiceImpl) RestartByPort(port int, killHard bool, starterArgs ...string) ([]byte, error) {
 	c.KillByPort(port, killHard)
-	return c.CmdService.GetCmdRunnerService().StartE(starterArgs...)
+	return c.CmdService.GetCmdRunnerService().StartE(nil, starterArgs...)
 }
 
 func (c *OSFunctionsServiceImpl) KillByPort(port int, hard bool) {
@@ -43,7 +43,7 @@ func (c *OSFunctionsServiceImpl) KillByPort(port int, hard bool) {
 		} else {
 			cmd = &KillByPortCmd{}
 		}
-		c.CmdService.Run(cmd, strconv.Itoa(port))
+		c.CmdService.Run(cmd, nil, strconv.Itoa(port))
 		time.Sleep(1 * time.Second)
 		if !c.IsPortBusy(port) {
 			return
@@ -52,7 +52,7 @@ func (c *OSFunctionsServiceImpl) KillByPort(port int, hard bool) {
 }
 
 func (c *OSFunctionsServiceImpl) GetNslookupIPs(url string) ([]string, error) {
-	r, err := c.CmdService.Run(&NslookupCmd{}, url)
+	r, err := c.CmdService.Run(&NslookupCmd{}, nil, url)
 	if err != nil {
 		return nil, err
 	}
