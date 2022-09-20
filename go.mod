@@ -1,6 +1,6 @@
 module bitbucket.org/itskovich/core
 
-go 1.17
+go 1.19
 
 require (
 	bitbucket.org/itskovich/goava v0.0.0-20211021114853-a1b1270d3db0
