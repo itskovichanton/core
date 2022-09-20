@@ -1,7 +1,7 @@
 package cmdservice
 
 import (
-	"bitbucket.org/itskovich/goava/pkg/goava/utils"
+	"github.com/itskovichanton/goava/pkg/goava/utils"
 	"strconv"
 	"strings"
 	"time"

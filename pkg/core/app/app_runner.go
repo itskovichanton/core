@@ -1,8 +1,8 @@
 package app
 
 import (
-	"bitbucket.org/itskovich/core/pkg/core"
-	"bitbucket.org/itskovich/goava/pkg/goava"
+	"github.com/itskovichanton/core/pkg/core"
+	"github.com/itskovichanton/goava/pkg/goava"
 	"github.com/kardianos/service"
 )
 

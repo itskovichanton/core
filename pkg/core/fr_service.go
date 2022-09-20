@@ -1,9 +1,9 @@
 package core
 
 import (
-	"bitbucket.org/itskovich/goava/pkg/goava/httputils"
 	"bytes"
 	"fmt"
+	"github.com/itskovichanton/goava/pkg/goava/httputils"
 	"mime/multipart"
 	"net/http"
 	"os"

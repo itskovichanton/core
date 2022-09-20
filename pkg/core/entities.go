@@ -1,7 +1,7 @@
 package core
 
 import (
-	"bitbucket.org/itskovich/core/pkg/core/validation"
+	"github.com/itskovichanton/core/pkg/core/validation"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/cast"
 )

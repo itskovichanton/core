@@ -1,9 +1,9 @@
 package core
 
 import (
-	"bitbucket.org/itskovich/goava/pkg/goava/utils"
 	"flag"
 	"fmt"
+	"github.com/itskovichanton/goava/pkg/goava/utils"
 	"github.com/spf13/cast"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"

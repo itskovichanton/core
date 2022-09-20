@@ -1,9 +1,9 @@
 package cmdservice
 
 import (
-	"bitbucket.org/itskovich/core/pkg/core"
-	"bitbucket.org/itskovich/goava/pkg/goava/utils"
 	"bufio"
+	"github.com/itskovichanton/core/pkg/core"
+	"github.com/itskovichanton/goava/pkg/goava/utils"
 	"os"
 	"os/exec"
 	"path/filepath"

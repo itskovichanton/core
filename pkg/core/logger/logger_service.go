@@ -1,11 +1,11 @@
 package logger
 
 import (
-	"bitbucket.org/itskovich/core/pkg/core"
-	"bitbucket.org/itskovich/core/pkg/core/validation"
-	"bitbucket.org/itskovich/goava/pkg/goava/utils"
 	"encoding/json"
 	"fmt"
+	"github.com/itskovichanton/core/pkg/core"
+	"github.com/itskovichanton/core/pkg/core/validation"
+	"github.com/itskovichanton/goava/pkg/goava/utils"
 	rotatelogs "github.com/lestrrat/go-file-rotatelogs"
 	"github.com/patrickmn/go-cache"
 	"log"

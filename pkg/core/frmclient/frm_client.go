@@ -1,10 +1,10 @@
 package frmclient
 
 import (
-	"bitbucket.org/itskovich/goava/pkg/goava/errs"
-	"bitbucket.org/itskovich/goava/pkg/goava/utils"
 	"bytes"
 	"encoding/json"
+	"github.com/itskovichanton/goava/pkg/goava/errs"
+	"github.com/itskovichanton/goava/pkg/goava/utils"
 	"io/ioutil"
 	"net/http"
 )

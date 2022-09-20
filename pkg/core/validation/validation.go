@@ -1,9 +1,9 @@
 package validation
 
 import (
-	"bitbucket.org/itskovich/goava/pkg/goava/errs"
-	"bitbucket.org/itskovich/goava/pkg/goava/utils"
 	"fmt"
+	"github.com/itskovichanton/goava/pkg/goava/errs"
+	"github.com/itskovichanton/goava/pkg/goava/utils"
 	"github.com/spf13/cast"
 	"net/mail"
 	"reflect"

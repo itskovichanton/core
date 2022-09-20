@@ -1,11 +1,11 @@
 package di
 
 import (
-	"bitbucket.org/itskovich/core/pkg/core"
-	"bitbucket.org/itskovich/core/pkg/core/app"
-	"bitbucket.org/itskovich/core/pkg/core/cmdservice"
-	"bitbucket.org/itskovich/core/pkg/core/logger"
-	"bitbucket.org/itskovich/goava/pkg/goava"
+	"github.com/itskovichanton/core/pkg/core"
+	"github.com/itskovichanton/core/pkg/core/app"
+	"github.com/itskovichanton/core/pkg/core/cmdservice"
+	"github.com/itskovichanton/core/pkg/core/logger"
+	"github.com/itskovichanton/goava/pkg/goava"
 	"github.com/patrickmn/go-cache"
 	"go.uber.org/dig"
 	"net/http"
