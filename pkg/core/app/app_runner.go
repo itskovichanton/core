@@ -18,7 +18,7 @@ type AppRunnerImpl struct {
 }
 
 func (c *AppRunnerImpl) Run() error {
-	if c.Config.IsServceMode() {
+	if c.Config.IsServiceMode() {
 		return c.runAsWindowsService()
 	}
 	return c.App.Run()

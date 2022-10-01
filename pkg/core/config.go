@@ -14,11 +14,6 @@ import (
 	"strings"
 )
 
-const (
-	ProfilePROD = "prod"
-	ProfileDEV  = "dev"
-)
-
 type AppInfo struct {
 	Version string
 	Name    string
@@ -37,58 +32,16 @@ type Props struct {
 type Apis struct {
 }
 
-type Actions struct {
-	DefaultLang      string
-	ApiMethodSystems []string
-}
-
-func (c *Actions) IsSystemPermitted(system string) bool {
-	if c.ApiMethodSystems[0] == "ANY" {
-		return true
-	}
-	return utils.HasElem(c.ApiMethodSystems, system)
-}
-
 type FR struct {
 	Url         string
 	DeveloperId int
 }
 
-type Server struct {
-	Port               int
-	Http               *Http
-	GrpcPort           int
-	EnableThrottleMode bool
-	EnableCORS         bool
-}
-
-type Multipart struct {
-	MaxRequestSizeBytes string
-}
-
-func (c Multipart) GetMaxRequestSizeBytes() (uint64, error) {
-	return utils.ParseMemory(c.MaxRequestSizeBytes)
-}
-
-type Ssl struct {
-	CertFile string
-	KeyFile  string
-	Enabled  bool
-	Network  string
-}
-
-type Http struct {
-	Multipart *Multipart
-	Ssl       *Ssl
-}
-
 type Config struct {
 	Profile  string
-	Server   *Server
 	FR, FR2  *FR
 	App      *AppInfo
 	Props    *Props
-	Actions  *Actions
 	Settings map[string]interface{}
 }
 
@@ -118,7 +71,7 @@ func (c *Config) GetAppName() string {
 
 func (c *Config) GetBaseWorkDir() string {
 	baseDir := ""
-	if c.IsServceMode() {
+	if c.IsServiceMode() {
 		baseDir = c.ServiceWorkDir()
 	}
 	return filepath.Join(baseDir, c.App.Name, "workdir")
@@ -191,7 +144,7 @@ func (c *Config) GetResourceFilePath(resourcePath string) string {
 	return filepath.Join(c.Props.ResourcesPath, resourcePath)
 }
 
-func (c *Config) IsServceMode() bool {
+func (c *Config) IsServiceMode() bool {
 	return c.GetBool("service", "enabled")
 }
 
