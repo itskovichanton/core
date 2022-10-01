@@ -2,7 +2,7 @@ package core
 
 import (
 	"bytes"
-	"github.com/labstack/gommon/email"
+	"github.com/itskovichanton/core/pkg/core/email"
 	"html/template"
 	"net/smtp"
 	"strings"
