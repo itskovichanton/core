@@ -93,22 +93,6 @@ func Ignore(ld map[string]interface{}) map[string]interface{} {
 }
 
 func Args(ld map[string]interface{}, args interface{}) map[string]interface{} {
-	switch ex := args.(type) {
-	case *core.CallParams:
-		argsX := core.CallParams{
-			Request:    nil,
-			Parameters: ex.Parameters,
-			URL:        ex.URL,
-			Caller:     ex.Caller,
-			Raw:        ex.Raw,
-		}
-		if _, callerExists := ld["c"]; callerExists {
-			argsX.Caller = nil
-		}
-		args = argsX
-		break
-	}
-
 	return Field(ld, "p", args)
 }
 

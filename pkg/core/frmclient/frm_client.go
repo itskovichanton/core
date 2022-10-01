@@ -5,14 +5,14 @@ import (
 	"encoding/json"
 	"github.com/itskovichanton/goava/pkg/goava/errs"
 	"github.com/itskovichanton/goava/pkg/goava/utils"
-	"io/ioutil"
+	"io"
 	"net/http"
 )
 
 func ExecuteWidthFrmAPI(resp *http.Response, resultGetter interface{}) (interface{}, error) {
 
 	defer resp.Body.Close()
-	respBytes, err := ioutil.ReadAll(resp.Body)
+	respBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}

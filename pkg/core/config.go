@@ -7,7 +7,6 @@ import (
 	"github.com/spf13/cast"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -102,7 +101,7 @@ func (c *Config) GetTempFilesStorageDir() string {
 }
 
 func (c *Config) GetTempFile(pattern string) (*os.File, error) {
-	return ioutil.TempFile(c.GetTempFilesStorageDir(), pattern)
+	return os.CreateTemp(c.GetTempFilesStorageDir(), pattern)
 }
 
 func (c *Config) GetInt(path ...string) int {
