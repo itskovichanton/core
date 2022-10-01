@@ -3,7 +3,7 @@ package email
 import (
 	"bytes"
 	"crypto/tls"
-	"github.com/itskovichanton/goava/pkg/goava/random"
+	"github.com/labstack/gommon/random"
 	"html/template"
 	"net"
 	"net/mail"

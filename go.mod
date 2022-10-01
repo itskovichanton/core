@@ -3,8 +3,9 @@ module github.com/itskovichanton/core
 go 1.19
 
 require (
-	github.com/itskovichanton/goava v1.0.5
+	github.com/itskovichanton/goava v1.0.6
 	github.com/kardianos/service v1.2.1
+	github.com/labstack/gommon v0.3.1
 	github.com/lestrrat/go-file-rotatelogs v0.0.0-20180223000712-d3151e2a480f
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/spf13/cast v1.5.0
